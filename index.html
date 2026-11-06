@@ -3,400 +3,211 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>新竹市民性格測驗</title>
+<title>何志勇是你的好市長嗎</title>
+<meta name="description" content="十個新竹生活情境，測出你心目中的市長類型，看看何志勇的政見和你有多合。何志勇競選團隊製作。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
 <style>
-*,*::before,*::after{box-sizing:border-box}
-[hidden]{display:none!important}
-img{max-width:100%}
-/* Layout: 單欄問卷 → 結果卡（性格＋三軸）→ 候選人政見貼合度 → 選舉問卷 */
+/* Layout: 手機優先，一題一頁的卡片流程 → 結果頁（市長類型＋相符政見清單） */
 :root{
-  --bg:#f3f5f4; --surface:#ffffff; --fg:#1d2624; --muted:#5f6d69; --line:#d5dcd9;
-  --a:#1f6f78; --a-soft:#dcecee; --b:#c2562b; --b-soft:#f7e3d9; --ok:#2e7d4f;
-  --display:"Noto Serif TC","Songti TC",serif; --body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --bg:#f4f7f6; --surface:#ffffff; --fg:#14283d; --muted:#5b6b78; --line:#d6dee3;
+  --navy:#123a63; --green:#1d8a5a; --green-soft:#e2f2ea; --warm:#c8553d; --warm-soft:#f8e6e1;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#141a19; --surface:#1c2423; --fg:#e6ecea; --muted:#9aa8a4; --line:#2f3b39;
-  --a:#5fb3bc; --a-soft:#1f3a3d; --b:#ec8a60; --b-soft:#3d2a22; --ok:#6cc595; color-scheme:dark}}
+  --bg:#0f1820; --surface:#18242f; --fg:#e6edf2; --muted:#9aaab6; --line:#2b3a47;
+  --navy:#8fb8e6; --green:#5cc795; --green-soft:#1c3a2d; --warm:#ec8b74; --warm-soft:#3d2620; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#141a19; --surface:#1c2423; --fg:#e6ecea; --muted:#9aa8a4; --line:#2f3b39;
-  --a:#5fb3bc; --a-soft:#1f3a3d; --b:#ec8a60; --b-soft:#3d2a22; --ok:#6cc595; color-scheme:dark}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.6;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 64px}
-.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
-header h1{font-family:var(--display);font-weight:900;font-size:clamp(28px,6vw,42px);line-height:1.2;margin:0;text-wrap:balance}
-header p{color:var(--muted);margin:8px 0 0;max-width:60ch}
-.bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
-.track{flex:1;min-width:120px;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
-.track i{display:block;height:100%;width:0;background:var(--fg);transition:width .3s}
+  --bg:#0f1820; --surface:#18242f; --fg:#e6edf2; --muted:#9aaab6; --line:#2b3a47;
+  --navy:#8fb8e6; --green:#5cc795; --green-soft:#1c3a2d; --warm:#ec8b74; --warm-soft:#3d2620; color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.65;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 56px}
+.wrap{max-width:620px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
 button{font:inherit;cursor:pointer}
-.ghost{font-size:13px;background:none;border:1px solid var(--line);color:var(--fg);padding:4px 12px;border-radius:999px}
-.ghost:hover{border-color:var(--fg)}
-.primary{background:var(--fg);color:var(--bg);border:0;border-radius:999px;padding:10px 22px;font-weight:700}
-.primary:disabled{opacity:.35;cursor:not-allowed}
-button:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
-ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px}
-.q h2{font-size:13px;color:var(--muted);font-weight:700;margin:0 0 8px;display:flex;gap:10px;align-items:baseline}
-.q h2 span{font-variant-numeric:tabular-nums;color:var(--muted);font-weight:500;letter-spacing:.05em}
-.scene{margin:0 0 10px;max-width:62ch}
-.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-@media (max-width:520px){.opts{grid-template-columns:1fr}}
-.opt{text-align:left;background:var(--surface);color:var(--fg);border:1.5px solid var(--line);border-radius:10px;padding:11px 14px;min-width:0;font-size:14px;transition:border-color .15s,background .15s}
+button:focus-visible,a:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+.brand{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:12px;letter-spacing:.12em;color:var(--muted)}
+.brand b{color:var(--navy);letter-spacing:.06em}
+h1{font-weight:900;font-size:clamp(30px,8vw,46px);line-height:1.15;margin:0;color:var(--navy);text-wrap:balance}
+h1 em{font-style:normal;color:var(--green)}
+.lead{margin:0;color:var(--muted);max-width:52ch}
+.primary{background:var(--navy);color:var(--bg);border:0;border-radius:999px;padding:12px 26px;font-weight:700;font-size:16px}
+.ghost{background:none;border:1px solid var(--line);color:var(--fg);border-radius:999px;padding:8px 16px;font-size:14px}
+.ghost:disabled{opacity:.35;cursor:not-allowed}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:14px}
+.meta{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted)}
+.track{flex:1;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.track i{display:block;height:100%;background:var(--green);transition:width .3s}
+.topic{font-size:13px;font-weight:700;color:var(--green);letter-spacing:.08em}
+.scene{margin:0;font-size:17px;font-weight:500}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;background:var(--bg);color:var(--fg);border:1.5px solid var(--line);border-radius:12px;padding:13px 15px;font-size:15px;transition:border-color .15s,background .15s}
 .opt:hover{border-color:var(--muted)}
-.opt.none{grid-column:1/-1;color:var(--muted);border-style:dashed}
-.opt.none[aria-pressed="true"]{color:var(--fg)}
-.opt[aria-pressed="true"]{border-color:var(--a);background:var(--a-soft);font-weight:700}
-.go{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted)}
-.card{background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:16px}
-.card.main{border-color:var(--fg)}
-.eyebrow{font-size:12px;letter-spacing:.12em;color:var(--muted)}
-.card h3{font-family:var(--display);font-weight:900;font-size:clamp(22px,5vw,32px);margin:0;line-height:1.3;text-wrap:balance}
-.card p{margin:0;max-width:62ch}
-.big{font-family:var(--display);font-weight:900;font-size:clamp(20px,4.4vw,26px);line-height:1.4;text-wrap:balance}
-.big em{font-style:normal;color:var(--a)}
-.axes{display:flex;flex-direction:column;gap:10px}
-.axis{display:grid;grid-template-columns:5.5em 1fr 5.5em;gap:10px;align-items:center;font-size:13px}
-.axis span:last-child{text-align:right}
-.meter{position:relative;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--a-soft),var(--line),var(--b-soft))}
-.meter i{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;background:var(--fg);transform:translate(-50%,-50%);transition:left .4s}
-.cands{display:flex;flex-direction:column;gap:12px}
-.cand{display:grid;grid-template-columns:7.5em 1fr 3.5em;gap:12px;align-items:center}
-.cand b{display:block}.cand small{color:var(--muted);font-size:12px}
-.cbar{height:10px;background:var(--line);border-radius:5px;overflow:hidden}
-.cbar i{display:block;height:100%;background:var(--a);border-radius:5px}
-.cand .pct{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
-details{border-top:1px solid var(--line);padding-top:12px}
-summary{cursor:pointer;font-size:13px;font-weight:700}
-table{border-collapse:collapse;font-size:13px;width:100%;min-width:560px}
-.tbl{overflow-x:auto;margin-top:10px}
-th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
-th{color:var(--muted);font-weight:500}
-td.hit{color:var(--ok);font-weight:700}
-td.na{color:var(--muted)}
-fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
-legend{font-weight:700;margin-bottom:6px;padding:0}
-.choices{display:flex;flex-wrap:wrap;gap:8px}
-.pick3 h2{font-size:15px;margin:0 0 4px}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.chip{border:1.5px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:6px 14px;font-size:14px}
-.chip[aria-pressed="true"]{border-color:var(--a);background:var(--a-soft);font-weight:700}
-.cover{font-size:15px;border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:6px}
-.cover b{color:var(--a)}
-.conflict{margin-top:12px;display:flex;flex-direction:column;gap:10px}
-.cf{border:1.5px solid var(--b);background:var(--b-soft);border-radius:10px;padding:12px 14px}
-.cf p{margin:0 0 10px;font-size:14px}
-.primary.sm{padding:6px 14px;font-size:13px}
-.q.flag{outline:2px solid var(--b);outline-offset:6px;border-radius:6px}
-.t3{min-width:0;font-size:12px;table-layout:fixed}
-.t3 th:first-child{width:38%}
-.t3 td,.t3 th{padding:6px 4px}
-td.miss{color:var(--b)}
-.choices label{border:1.5px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer;font-size:14px}
-.choices input{position:absolute;opacity:0;pointer-events:none}
-.choices label:has(input:checked){border-color:var(--a);background:var(--a-soft)}
-.choices label:has(input:focus-visible){outline:2px solid var(--fg);outline-offset:2px}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.note{font-size:12px;color:var(--muted)}
+.opt::before{content:"";display:inline-block;width:16px;height:16px;border:1.5px solid var(--muted);border-radius:4px;margin-right:10px;vertical-align:-2px}
+.opt[aria-pressed="true"]::before{background:var(--navy);border-color:var(--navy);box-shadow:inset 0 0 0 3px var(--surface)}
+.opt[aria-pressed="true"]{border-color:var(--navy);background:var(--surface);font-weight:700;box-shadow:inset 4px 0 0 var(--navy)}
+.nav{display:flex;justify-content:space-between;gap:10px}
+.type{font-size:13px;color:var(--muted);letter-spacing:.1em}
+.type-name{font-weight:900;font-size:clamp(24px,6.5vw,32px);line-height:1.25;color:var(--navy);margin:0}
+.score{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.score .num{font-weight:900;font-size:clamp(44px,13vw,64px);line-height:1;color:var(--green);font-variant-numeric:tabular-nums}
+.score .of{color:var(--muted)}
+.verdict{font-weight:900;font-size:clamp(19px,5vw,23px);line-height:1.4;margin:0;text-wrap:balance}
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.list li{border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.list li.ok{background:var(--green-soft)}
+.list li.diff{background:var(--warm-soft)}
+.list li.part{background:var(--bg);border:1px solid var(--line)}
+.list li.part .t{color:var(--navy)}
+.list .t{font-size:12px;font-weight:700;letter-spacing:.08em}
+.list li.ok .t{color:var(--green)}
+.list li.diff .t{color:var(--warm)}
+.list .you{font-size:13px;color:var(--muted)}
+.list .ho{font-size:14px}
+h2{font-size:16px;margin:4px 0 0}
+.note{font-size:12px;color:var(--muted);margin:0}
 .note a{color:inherit}
-.msg{font-size:14px;font-weight:700;color:var(--ok)}
-.msg.err{color:var(--b)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.cta{display:inline-block;text-decoration:none;background:var(--green);color:var(--bg);border-radius:999px;padding:12px 24px;font-weight:700}
+#result{display:flex;flex-direction:column;gap:22px}
+footer{border-top:1px solid var(--line);padding-top:14px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-
 <div class="wrap">
-  <header>
-    <h1>你是哪種新竹市民？</h1>
-    <p>十個新竹日常情境，每題從四個做法中選出最接近你想法的一個。部分做法取材自三位市長參選人的公開政見，選完可看到你的城市性格，以及哪位參選人的政見最接近你的選擇。</p>
-  </header>
-  <div class="bar"><span id="count">已作答 0 / 10</span><div class="track"><i id="prog"></i></div>
-    <button class="ghost" id="rand" type="button">隨機填答</button><button class="ghost" id="reset" type="button">重來</button></div>
-  <ol id="qs"></ol>
-  <section class="pick3" aria-labelledby="p3h">
-    <h2 id="p3h">最後一步：選出你最在乎的 3 個議題</h2>
-    <p class="note" id="p3hint">可略過；選了之後，結果頁會顯示各參選人在這些議題上有幾項政見。</p>
-    <div class="chips" id="top3"></div>
-    <div class="conflict" id="conflict" role="alert" hidden></div>
-  </section>
-  <div class="go"><button class="primary" id="see" type="button" disabled>看我的結果</button><span id="goHint">十題都選完就能看結果</span></div>
+  <div class="brand"><span>新竹 再勇敢一次</span><b>何志勇競選團隊</b></div>
 
-  <section id="out" hidden>
-    <div class="card main" id="result" aria-live="polite"></div>
+  <section id="intro" class="card">
+    <h1>何志勇是不是<em>你的好市長</em>？</h1>
+    <p class="lead">十個新竹生活情境，每題選出你贊成的做法，可以複選。測出你心目中的市長類型，也看看何志勇的政見和你有多合。</p>
+    <div class="row"><button class="primary" id="start" type="button">開始測驗</button><span class="note">約 2 分鐘，不收集任何個人資料</span></div>
   </section>
 
-  <section class="card" id="match" hidden></section>
-
-  <section class="card" id="survey" hidden>
-    <div class="eyebrow">選舉問卷</div>
-    <h3>願意再花一分鐘，填一份四題的選舉問卷嗎？</h3>
-    <p class="note">問卷不記名，不會詢問姓名或聯絡方式。</p>
-    <div class="row" id="consent">
-      <button class="primary" id="yes" type="button">願意填寫</button>
-      <button class="ghost" id="no" type="button">不用了，謝謝</button>
-    </div>
-    <form id="form" hidden novalidate>
-      <div style="display:flex;flex-direction:column;gap:20px">
-        <fieldset><legend>1. 您是否具有新竹市的投票權？</legend><div class="choices" data-name="right"></div></fieldset>
-        <fieldset><legend>2. 這次市長選舉，您去投票的意願如何？</legend><div class="choices" data-name="intent"></div></fieldset>
-        <fieldset><legend>3. 您支持哪一位參選人？</legend><div class="choices" data-name="support"></div></fieldset>
-        <fieldset><legend>4. 不論支持誰，您看好哪一位會當選？</legend><div class="choices" data-name="outlook"></div></fieldset>
-        <div class="row"><button class="primary" type="submit" id="send">送出問卷</button><span class="msg" id="smsg" role="status"></span></div>
-      </div>
-    </form>
-    <p class="msg" id="declined" hidden>沒問題，謝謝您完成測驗。</p>
+  <section id="quiz" class="card" hidden aria-live="polite">
+    <div class="meta"><span id="qnum">1 / 10</span><div class="track"><i id="prog"></i></div></div>
+    <div class="topic" id="topic"></div>
+    <p class="scene" id="scene"></p>
+    <p class="note" id="multi">可複選，選好後按「下一題」</p>
+    <div class="opts" id="opts"></div>
+    <div class="nav"><button class="ghost" id="back" type="button">上一題</button><button class="ghost" id="next" type="button" disabled>下一題</button></div>
   </section>
 
-  <p class="note">本測驗僅供參考，不代表任何政黨或參選人立場。參選人依姓氏筆畫排列；政見依 2026 年 6–11 月的新聞報導、參選人競選網站與政見彙整網站整理，只計入找得到明確主張的題目，未必涵蓋完整政見。</p>
+  <section id="result" hidden></section>
+
+  <footer>
+    <p class="note">本測驗由何志勇競選團隊製作，屬競選宣傳，非民意調查。何志勇的主張依其市政策白皮書《志慧新創，勇敢竹夢》整理；測驗不記錄、不上傳任何作答內容。</p>
+  </footer>
 </div>
 
 <script>
-const C=[
- {id:"ho",name:"何志勇",party:"2 號・無黨籍"},
- {id:"kao",name:"高虹安",party:"1 號・無黨籍・現任"},
- {id:"chuang",name:"莊競程",party:"3 號・民主進步黨"},
-];
-// 軸線：P 公共集體(-)↔個人自主(+)；D 生活品質(-)↔發展建設(+)；R 穩健保障(-)↔開放嘗試(+)
-// cand：該參選人公開主張較接近哪一邊（0 左、1 右），附依據；未列者不計分
-// o：[做法, 方向(0 左／1 右), 強度]；畫面上選項順序隨機
-// cand：該參選人核心主張對應的選項編號（最多兩個）與依據；無明確主張者不計分
+// 每個做法：[文字, 是否為何志勇主張, 市長類型]  類型：B 建設、C 照顧、R 改革、S 穩健
+// ho：何志勇在此議題的主張（白皮書）
 const Q=[
- {t:"交通運輸",sc:"你每天早上 7:40 從東區開往竹科，光復路塞到動彈不得。市府明年的交通預算只能押一個方向，你投給哪個？",s:{},
-  o:[["興建新竹捷運，就算要等七、八年",0,1],["推動台鐵市區高架化，搭配 BRT 公車專用道",0,.5],["導入 AI 號誌、拓寬瓶頸路口，馬上改善",1,.5],["增設停車位與智慧停車，讓開車通勤更順",1,1]],
-  cand:{ho:[[1,2],"白皮書：台鐵市區段高架化（4 年動工、8 年完工）、公道五路／經國路／中華路 BRT、AI 智慧號誌"],kao:[[2,3],"拓寬慈雲路、明湖路 34 處號誌調整、智慧停車柱"],chuang:[[0,2],"新竹捷運 4 年內動工、AI 智慧號誌"]}},
- {t:"居住",sc:"表妹剛到竹科上班，月薪 4 萬，附近套房一個月就要 1.8 萬。你希望市府怎麼幫她？",s:{P:1},
-  o:[["多蓋社會住宅，租金打市價六折",0,1],["提高青年租金補貼，直接減輕負擔",0,.5],["鬆綁容積、加速老屋都更，讓房子變多",1,.5],["開發新重劃區，蓋平價住宅讓她買得起",1,1]],
-  cand:{ho:[[0,1],"白皮書：興建可負擔多元社會住宅、放寬並提高青年租屋補助"],kao:[[0,1],"持續推動社宅、提高青年租金補貼"]}},
- {t:"社會福利",sc:"市府今年意外多出 30 億元預算。你希望這筆錢怎麼用？",s:{P:1},
-  o:[["蓋公共托育和日照中心，服務做到家門口",0,1],["補助托育和長照費用，讓家庭自己選機構",0,.5],["發在地消費金，只能在新竹的店家使用",1,.5],["直接普發現金，每位市民都領得到",1,1]],
-  cand:{ho:[[0,2],"白皮書：16,800 元生活支持金（鼓勵在地消費）、公幼延長照護至晚間 7 點並增加公托量能"],kao:[[0,1],"公共托育據點擴增、敬老卡點數提高至 1,200 點"],chuang:[[0,3],"市民普發 1 萬元、香山全齡生活館（公托、長照）"]}},
- {t:"教育",sc:"孩子明年要上的學區國中一班 33 人，老師流動率又高。市府資源有限，你希望先做哪件事？",s:{R:1},
-  o:[["增班增學位，先把每班人數降下來",0,1],["提高教師津貼、減輕行政負擔，把好老師留住",0,.5],["引進雙語、AI 和 STEAM 特色課程",1,.5],["開放跨區選校、增設實驗學校",1,1]],
-  cand:{ho:[[0,2],"白皮書鄭用錫計畫：熱門學區階段性增班、真雙語與 STEAM 特色課程"],kao:[[0,2],"新竹好學 2.0：K-12 科技雙語學校、AI 適性教育；增班擴招"],chuang:[[0,1],"增班、擴大就近入學、教師減負、科技城市教師加給"]}},
- {t:"公共安全",sc:"你家巷口一個月內發生兩起機車竊案，里長提議加裝 20 支監視器。你的看法是？",s:{R:1},
-  o:[["全面加裝，最好再加上 AI 影像辨識",0,1],["可以裝，但只裝巷口，影像僅供警方調閱",0,.5],["先加強路燈和社區巡守隊就好",1,.5],["不要裝，鄰里互相照應，不想被監看",1,1]],
-  cand:{ho:[[1,2],"白皮書：盤點治安死角改善照明與監視、結合社區巡守與警民合作"],kao:[[0,1],"治安熱點增設監視器、2,220 組車牌辨識"]}},
- {t:"環境生活",sc:"香山有一塊 10 公頃的閒置綠地，建商提案蓋商場和住宅，可增加稅收和 2,000 個工作機會。你會怎麼投？",s:{D:1},
-  o:[["全部留作公園和濕地，不開發",0,1],["一半做公園，一半低密度開發",0,.5],["可以開發，但建商要回饋公共設施",1,.5],["全面開發，越快動工越好",1,1]],
-  cand:{ho:[[1,2],"白皮書：頭前溪南岸及香山整體發展，搭配大型中央公園與公共開放空間"]}},
- {t:"經濟就業",sc:"同一筆預算，可以拿來給國際半導體大廠提供土地與稅賦優惠、爭取研發中心落腳新竹，也可以用來扶植在地產業。你選？",s:{D:1},
-  o:[["補助 300 家在地小店和傳統市場升級",0,1],["扶植新創，把閒置空屋改成育成中心",0,.5],["爭取大廠，但要求優先聘用在地人",1,.5],["全力爭取大廠，優惠條件給到底",1,1]],
-  cand:{ho:[[0,1],"白皮書：市有閒置空間設新創孵化基地、新竹市民回饋卡支持在地商家"],chuang:[[0,1],"興建香山公有市場、活化海山漁港市集、新住民創業陪跑團"]}},
- {t:"醫療衛生",sc:"住在北區的爸媽半夜突然胸痛，送到急診要 25 分鐘。你最希望市府做什麼？",s:{P:1},
-  o:[["擴建市立醫院急診，公立醫療撐起來",0,1],["每區設社區健康站和夜間門診",0,.5],["補助民間醫院擴充急重症量能",1,.5],["引進醫學中心和遠距智慧醫療",1,1]],cand:{}},
- {t:"市政治理",sc:"新市長上任第一年，你最希望他把力氣花在哪裡？",s:{R:1},
-  o:[["讓停擺或進行中的重大工程如期完工",0,1],["先把市府債務還清，再談新計畫",0,.5],["所有標案與親屬承攬資訊公開上網",1,.5],["讓市民參與審預算，大幅改造市府運作",1,1]],
-  cand:{ho:[[2,3],"白皮書：利益關係公開與迴避、標案資訊公開、陽光市政儀表板、公民審議預算"],kao:[[0,1],"三年償債 83 億元、延續進行中的建設"]}},
- {t:"文化城市",sc:"市府有一筆 20 億元的文化預算，你希望用在哪裡？",s:{D:1},
-  o:[["修復古蹟和老屋，保留城市原貌",0,1],["活化客庄與在地文化，做成故事館",0,.5],["舉辦國際科技藝術節，打響城市名號",1,.5],["興建大型展演場館，成為新地標",1,1]],
-  cand:{ho:[[0,3],"白皮書：串連古蹟與舊城街區（竹塹文化廊帶）、展演空間升級國際規格、智慧巨蛋"],chuang:[[1,3],"科技客家：數位保存文化、活化客庄；重啟國際展演中心"]}},
+ {t:"交通運輸",sc:"早上 7:40 從東區開往竹科，光復路塞到動彈不得。你贊成市府用哪些方式解決？",
+  o:[["推動台鐵市區高架化，搭配 BRT 公車專用道",1,"B"],["導入 AI 智慧號誌，依車流即時調整",1,"R"],["興建新竹捷運，就算要等很多年",0,"B"],["優先拓寬瓶頸道路，讓開車更順",0,"S"]],
+  ho:"台鐵市區段高架化（4 年動工、8 年完工）、公道五路／經國路／中華路 BRT、AI 智慧號誌，並增設立體停車場、推校園商圈行人優先區。"},
+ {t:"居住",sc:"表妹剛到竹科上班，月薪 4 萬，附近套房一個月就要 1.8 萬。你希望市府怎麼幫她？",
+  o:[["興建可負擔的社會住宅",1,"C"],["放寬並提高青年租屋補助",1,"C"],["鬆綁容積、加速民間都更",0,"B"],["房市交給市場，政府少介入",0,"S"]],
+  ho:"興建可負擔多元社會住宅、放寬青年租屋補助，推動青銀共居。"},
+ {t:"社會福利",sc:"市府今年多出一筆預算。你希望這筆錢怎麼用？",
+  o:[["每人每年發生活支持金，鼓勵在地消費",1,"C"],["延長公托公幼照護時間、增加名額",1,"C"],["一次性普發現金給每位市民",0,"C"],["先拿去還債，不增加新支出",0,"S"]],
+  ho:"首創每人每年 16,800 元生活支持金；公幼延長照護至晚間 7 點並增加公托量能。"},
+ {t:"教育",sc:"孩子明年要上的學區國中一班 33 人，學校也沒什麼特色。你希望市府怎麼做？",
+  o:[["熱門學區階段性增班，降低班級人數",1,"C"],["發展雙語與 STEAM 特色課程，校校有特色",1,"R"],["開放跨區選校，讓家長自由選",0,"R"],["維持現狀，避免教育政策一直變動",0,"S"]],
+  ho:"鄭用錫計畫：熱門學區階段增班、校校有特色、真雙語與 STEAM，並為老師行政減負、提高導師費。"},
+ {t:"治安",sc:"最近詐騙電話和巷口竊案都變多，你最希望市府怎麼做？",
+  o:[["設跨局處治安辦公室，用 AI 預警與社區防詐",1,"R"],["盤點治安死角，改善照明與監視，結合社區巡守",1,"C"],["每條巷子都裝監視器，越多越好",0,"S"],["治安是警察的事，維持現有警力就好",0,"S"]],
+  ho:"設跨局處治安辦公室，整合警政、教育、社政與科技，導入 AI 智慧預警、社區防詐及兒少安全網。"},
+ {t:"城市發展",sc:"香山和頭前溪南岸有大片土地等待規劃。你希望怎麼做？",
+  o:[["整體規劃成新竹副都心，搭配大型中央公園",1,"B"],["升級香山工業區，結合生態與節能減碳",1,"R"],["全部保留原狀，不要開發",0,"S"],["交給建商自由開發，越快越好",0,"B"]],
+  ho:"打造新竹副都心，興建社宅與中央公園、發展香山；香山工業升級，打造台商回流特區。"},
+ {t:"經濟就業",sc:"新竹有竹科和兩所頂尖大學，但年輕人創業還是很難。你覺得市府該做什麼？",
+  o:[["活化閒置空間，串聯竹科與清大、陽交大做新創孵化",1,"R"],["發行市民回饋卡，讓錢留在在地店家",1,"C"],["用最大優惠吸引國際大廠進駐就好",0,"B"],["經濟交給中央和企業，市府不必插手",0,"S"]],
+  ho:"市有閒置空間設新創孵化基地，串聯竹科、清大、陽交大，提供場域驗證與投資媒合；發行新竹市民回饋卡。"},
+ {t:"高齡生活",sc:"爸媽退休了，敬老卡點數常常用不完，想要的服務又買不到。你希望市府怎麼改？",
+  o:[["敬老卡點數自由配，讓長輩自己決定怎麼用",1,"R"],["推動在地安老，讓長輩住在熟悉的社區",1,"C"],["多蓋大型安養機構",0,"B"],["維持現行敬老卡制度就好",0,"S"]],
+  ho:"敬老愛心卡點數自由配；推動在地安老、青銀共居。"},
+ {t:"市政治理",sc:"新市長上任第一年，你希望他把力氣花在哪些地方？",
+  o:[["重大標案公開、落實利益迴避，終結裙帶干政",1,"R"],["推市政透明儀表板，讓市民參與審預算",1,"R"],["先把市府債務還清，再談新計畫",0,"S"],["延續現在的施政，不要大改",0,"S"]],
+  ho:"終結裙帶干政，重大標案檢調共同參與、落實利益迴避；文官治市、專業任用；市政透明儀表板、公民審議預算。"},
+ {t:"文化城市",sc:"週末想帶家人出門，卻常覺得新竹沒地方去。你希望市府在文化上怎麼做？",
+  o:[["串連古蹟與舊城，辦夜間展演，打造日文化、夜藝文",1,"B"],["發文化券、開免費體驗課，讓市民決定預算",1,"C"],["把預算集中在跨年等大型晚會",0,"B"],["文化活動交給民間，市府少花錢",0,"S"]],
+  ho:"古蹟串連、走讀巴士、夜間展演，打造「日文化、夜藝文」；文化券、免費體驗課，千萬預算市民作主；展演空間升級國際規格。"},
 ];
 const TYPES={
- "---":["社區守護者","你相信好城市從鄰里開始：公共服務要到位、生活環境要安穩，一步一步來。"],
- "--+":["文藝青年","你要的是一座有公共性、有溫度、能自由嘗試的城市，咖啡店和老屋比摩天樓更吸引你。"],
- "-+-":["穩健規劃師","你支持市府帶頭建設，但要按部就班、有計畫，公共工程最好準時又不超支。"],
- "-++":["未來城市夢想家","你想要市府大刀闊斧，用公共力量把整座城市推向下一個時代。"],
- "+--":["安居顧家派","你重視自己和家人的生活品質，希望政府少管一點，但治安和環境要顧好。"],
- "+-+":["城市游牧者","你喜歡自由、彈性、選擇多的城市生活，不想被規定綁住，也不愛大興土木。"],
- "++-":["務實精算派","你看重經濟成長和個人選擇，但花錢要精打細算，每一分預算都要看到效益。"],
- "+++":["拚經濟衝鋒隊","你想要一座快速成長、機會滿滿的城市，敢投資、敢開發，讓有本事的人放手去衝。"],
+ B:["勇於建設的開路者","你希望市長敢做大建設，十年後回頭看，城市真的長出新樣子。"],
+ C:["貼近生活的照顧者","你在乎每一個家庭過得好不好，市長要把照顧做到家門口。"],
+ R:["打破慣例的改革者","你受夠了老方法，期待市長用新思維、新科技和透明治理改變市府。"],
+ S:["精打細算的穩健派","你希望市長務實穩重，每一分錢都花在刀口上，不亂開支票。"],
 };
-const SURVEY={
- right:["有","沒有","不確定"],
- intent:["一定會去投","可能會去投","可能不會去投","一定不會去投","還沒決定"],
- support:[...C.map(c=>c.name),"尚未決定","不願透露"],
- outlook:[...C.map(c=>c.name),"不知道"],
-};
-const SOURCES=[
- ["中央社：竹市長選戰聚焦交通 3參選人各提政見","https://www.cna.com.tw/news/aloc/202610300195.aspx"],
- ["中央社：高虹安推民生福利、莊競程提教育交通","https://cna.com.tw/news/aipl/202609160107.aspx"],
- ["聯合報：高虹安拚有感施政","https://udn.com/news/story/124652/9537176"],
- ["ETtoday：莊競程普發 1 萬元政見","https://www.ettoday.net/news/20260817/3220752.htm"],
- ["聯合報：莊競程提科技客家政見","https://udn.com/news/story/124652/9651723"],
- ["新頭殼：何志勇發布市政白皮書","https://newtalk.tw/news/view/2026-10-30/1068391"],
- ["自由時報：何志勇第一政見終結裙帶干政","https://news.ltn.com.tw/news/HsinchuCity/breakingnews/5583593"],
- ["自由時報：何志勇 16800 生活支持金","https://news.ltn.com.tw/news/politics/breakingnews/5590732"],
- ["何志勇競選網站","https://chihyungho.github.io/"],
- ["何志勇陣營提供：市政策白皮書《志慧新創，勇敢竹夢》（未公開網址）",""],
- ["中央社：高虹安智慧警政","https://www.cna.com.tw/postwrite/chi/425567"],
- ["知新聞：高虹安新竹好學 2.0","https://www.knews.com.tw/news/D324CAF83FEE0D92C85CB12DD74B9BBE"],
- ["政見網：三位參選人政見與號次","https://xn--2lw665d.tw/election/2026/%E6%96%B0%E7%AB%B9%E5%B8%82"],
-];
+const WEBSITE="https://chihyungho.github.io/";
 
-const ans=Array(Q.length).fill(null);
-let shownKey=null, stats=null;
-const API="api";
-function rid(){let id=null;try{id=localStorage.getItem("hcq_rid");}catch(e){}
-  if(!id){id=(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random().toString(36).slice(2));try{localStorage.setItem("hcq_rid",id);}catch(e){}}
-  return id;}
-async function post(path,body){const r=await fetch(`${API}/${path}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({rid:rid(),...body})});
-  if(!r.ok)throw new Error((await r.json().catch(()=>({}))).error||r.status);return r.json();}
-async function loadStats(){try{const r=await fetch(`${API}/stats`);if(r.ok)stats=await r.json();}catch(e){}}
+const ans=Q.map(()=>[]);
+const orders=Q.map(q=>q.o.map((_,j)=>j).sort(()=>Math.random()-.5));
+let cur=0;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
-// 每題最後加上「沒有意見」，方向為 null，不影響性格軸線
-Q.forEach(q=>q.o.push(["沒有意見",null,0]));
-const NONE=4;
-const side=i=>Q[i].o[ans[i]][1];
-Q.forEach((q,i)=>{
-  const order=[...q.o.map((_,j)=>j).filter(j=>j!==NONE).sort(()=>Math.random()-.5),NONE];
-  const li=document.createElement("li");li.className="q";li.id="qli"+i;
-  li.innerHTML=`<h2><span>${String(i+1).padStart(2,"0")}</span>${q.t}</h2><p class="scene">${q.sc}</p><div class="opts">
-   ${order.map(j=>`<button class="opt${j===NONE?" none":""}" id="q${i}o${j}" type="button" aria-pressed="false">${q.o[j][0]}</button>`).join("")}</div>`;
-  order.forEach(j=>li.querySelector(`#q${i}o${j}`).onclick=()=>pick(i,j));
-  $("qs").appendChild(li);
-});
-Object.entries(SURVEY).forEach(([k,opts])=>{
-  const box=document.querySelector(`.choices[data-name="${k}"]`);
-  box.innerHTML=opts.map((o,j)=>`<label><input type="radio" name="${k}" id="${k}${j}" value="${esc(o)}">${esc(o)}</label>`).join("");
-});
-
-function pick(i,v){ans[i]=v;if(v!==NONE)keepNone.delete(i);renderProgress();checkConflicts();refresh();}
-function refresh(){if(shownKey&&ans.every(v=>v!==null))showResult();}
-const top3=[], keepNone=new Set();
-// 最在乎的議題卻選了「沒有意見」時，在頁面上請受測者確認
-function checkConflicts(){
-  const box=$("conflict"), list=top3.filter(i=>ans[i]===NONE&&!keepNone.has(i));
-  if(!list.length){box.hidden=true;box.innerHTML="";return;}
-  box.innerHTML=list.map(i=>`<div class="cf"><p>你把「${Q[i].t}」列為最在乎的議題，但第 ${i+1} 題選了「沒有意見」。要回去修改這題的答案嗎？</p>
-    <div class="row"><button type="button" class="primary sm" data-go="${i}">回到第 ${i+1} 題修改</button><button type="button" class="ghost" data-keep="${i}">維持「沒有意見」</button></div></div>`).join("");
-  box.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{const i=+b.dataset.go;const li=$("qli"+i);
-    li.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"center"});
-    li.classList.add("flag");setTimeout(()=>li.classList.remove("flag"),2400);li.querySelector(".opt").focus({preventScroll:true});});
-  box.querySelectorAll("[data-keep]").forEach(b=>b.onclick=()=>{keepNone.add(+b.dataset.keep);checkConflicts();});
-  box.hidden=false;
+function show(i){
+  cur=i;const q=Q[i];
+  $("qnum").textContent=`${i+1} / ${Q.length}`;
+  $("prog").style.width=(i/Q.length*100)+"%";
+  $("topic").textContent=q.t;$("scene").textContent=q.sc;
+  $("opts").innerHTML=orders[i].map(j=>`<button class="opt" type="button" data-j="${j}" aria-pressed="${ans[i].includes(j)}">${esc(q.o[j][0])}</button>`).join("");
+  $("opts").querySelectorAll(".opt").forEach(b=>b.onclick=()=>{const j=+b.dataset.j,k=ans[i].indexOf(j);
+    if(k>=0)ans[i].splice(k,1);else ans[i].push(j);
+    b.setAttribute("aria-pressed",k<0);$("next").disabled=!ans[i].length;});
+  $("back").disabled=i===0;
+  $("next").disabled=!ans[i].length;
+  $("next").textContent=i===Q.length-1?"看結果":"下一題";
 }
-Q.forEach((q,i)=>{const b=document.createElement("button");b.type="button";b.className="chip";b.id="t3_"+i;b.textContent=q.t;b.setAttribute("aria-pressed","false");
-  b.onclick=()=>{const k=top3.indexOf(i);
-    if(k>=0){top3.splice(k,1);keepNone.delete(i);}else if(top3.length<3)top3.push(i);else{$("p3hint").textContent="最多選 3 個，請先取消一個再選。";return;}
-    $("p3hint").textContent=`已選 ${top3.length} / 3。`;
-    Q.forEach((_,j)=>$("t3_"+j).setAttribute("aria-pressed",top3.includes(j)));checkConflicts();refresh();};
-  $("top3").appendChild(b);});
-function coverHTML(){
-  if(!top3.length)return "";
-  const names=top3.map(i=>Q[i].t);
-  const mark=(c,i)=>{const p=Q[i].cand[c.id];if(ans[i]===NONE)return ["您沒有意見","na"];if(!p)return ["無明確政見","na"];return p[0].includes(ans[i])?["✓ 一致","hit"]:["✗ 不同","miss"];};
-  const rows=C.map(c=>({c,n:top3.filter(i=>mark(c,i)[1]==="hit").length})).sort((a,b)=>b.n-a.n);
-  const table=`<div class="tbl"><table class="t3"><thead><tr><th>議題</th>${C.map(c=>`<th>${c.name}</th>`).join("")}</tr></thead><tbody>${
-    top3.map(i=>`<tr><th>${Q[i].t}<br><small>你選：${esc(Q[i].o[ans[i]][0])}</small></th>${C.map(c=>{const [t,k]=mark(c,i);return `<td class="${k}">${t}</td>`;}).join("")}</tr>`).join("")}</tbody></table></div>`;
-  return `<div class="cover"><div>在您最在乎的 ${top3.length} 個議題（${names.join("、")}）中，與您做法一致的政見：${rows.map(r=>`${r.c.name} <b>${r.n}</b> 項`).join("、")}。</div>
-   ${table}
-   <div class="note">「無明確政見」指本測驗未蒐集到該參選人在此議題的明確主張。何志勇依其陣營提供的白皮書；高虹安、莊競程依新聞報導與政見彙整網站，可能未涵蓋完整政見。</div></div>`;
+function go(d){
+  if(d>0&&!ans[cur].length)return;
+  if(cur+d>=Q.length)return result();
+  if(cur+d>=0)show(cur+d);
 }
-function renderProgress(){
-  Q.forEach((q,i)=>q.o.forEach((_,j)=>$(`q${i}o${j}`).setAttribute("aria-pressed",ans[i]===j)));
-  const n=ans.filter(v=>v!==null).length;
-  $("count").textContent=`已作答 ${n} / 10`;
-  $("prog").style.width=n*10+"%";
-  $("see").disabled=n<10;
-  $("goHint").textContent=n<10?`還差 ${10-n} 題`:(shownKey?"改了答案？再按一次更新結果":"可以看結果了");
-}
-function scores(){
-  const sc={P:0,D:0,R:0},first={};
-  Q.forEach((q,i)=>{const [,d,w]=q.o[ans[i]];if(d===null)return;for(const k in q.s){sc[k]+=d?w:-w;if(!(k in first))first[k]=d;}});
-  const tot={P:0,D:0,R:0};Q.forEach(q=>{for(const k in q.s)tot[k]++;});
-  const key=["P","D","R"].map(k=>sc[k]>0||(sc[k]===0&&first[k]===1)?"+":"-").join("");
-  return {sc,tot,key};
-}
-// 計分：答題人選「沒有意見」的題目不計；參選人有政見且選中 1 分、選了其他做法 0 分；參選人沒有明確政見 0.5 分
-function qScore(p,a){if(a===NONE)return null;if(!p)return .5;return p[0].includes(a)?1:0;}
-function candMatch(){
-  return C.map(c=>{
-    let pts=0,n=0;
-    Q.forEach((q,i)=>{const v=qScore(q.cand[c.id],ans[i]);if(v!==null){pts+=v;n++;}});
-    return {...c,pts,n,pct:n?Math.round(pts/n*100):0};
-  });
-}
-function sharePct(key){
-  if(!stats||!stats.n)return null;
-  return {pct:Math.round((stats.counts[key]||0)/stats.n*100),total:stats.n,seed:stats.seed||0};
-}
-
-const MIN_PLAYERS=30; // 真實玩家滿 30 人才顯示比例，不使用模擬資料
-const CLOSE=10; // 與最高分差距在此百分點以內，視為同樣接近
-function closeSet(m){const top=Math.max(...m.map(x=>x.pct));return m.filter(x=>top-x.pct<=CLOSE).sort((a,b)=>b.pct-a.pct);}
-function bestIds(){return ans.every(a=>a===NONE)?[]:closeSet(candMatch()).map(x=>x.id);}
-function candShare(ids){
-  if(!stats||!stats.bestN||stats.bestN<MIN_PLAYERS)return null;
-  return ids.map(id=>Math.round((stats.best[id]||0)/stats.bestN*100));
-}
-function showResult(){
-  const {sc,tot,key}=scores();
-  const [name,desc]=TYPES[key];
-  const prefix=side(0)===0?"公共運輸派":side(0)===1?"自駕通勤派":"通勤隨性派";
-  const pos=k=>50+sc[k]/tot[k]*50;
-  const m=candMatch();
-  const top=Math.max(...m.map(x=>x.pct));
-  const close=closeSet(m);const best=close.map(x=>x.name);
-  const share=sharePct(key);
-  const shareLine=share
-    ?`您的特質跟 <em>${share.pct}%</em> 的受測者一樣`
-    :`受測者統計暫時無法載入`;
-  const shares=ans.every(a=>a===NONE)?null:candShare(close.map(x=>x.id));
-  const shareTxt=!shares?"":shares.length===1?`目前已有 <em>${shares[0]}%</em> 玩家政見與他相同。`:`目前分別有 ${shares.map(x=>`<em>${x}%</em>`).join("、")} 的玩家政見與${close.length===2?"這兩位":"這三位"}相同。`;
-  $("result").innerHTML=`<div class="eyebrow">你的城市性格</div><h3>${prefix}的${name}</h3><p>${desc}</p>
-   <div class="axes">
-    <div class="axis"><span>公共集體</span><div class="meter"><i style="left:${pos("P")}%"></i></div><span>個人自主</span></div>
-    <div class="axis"><span>生活品質</span><div class="meter"><i style="left:${pos("D")}%"></i></div><span>發展建設</span></div>
-    <div class="axis"><span>穩健保障</span><div class="meter"><i style="left:${pos("R")}%"></i></div><span>開放嘗試</span></div>
+// 每題得分＝所選做法中屬於何志勇主張的比例
+const qScore=i=>ans[i].filter(j=>Q[i].o[j][1]===1).length/ans[i].length;
+function result(){
+  const scores=Q.map((_,i)=>qScore(i));
+  const pct=Math.round(scores.reduce((a,b)=>a+b,0)/Q.length*100);
+  const tally={B:0,C:0,R:0,S:0};Q.forEach((q,i)=>ans[i].forEach(j=>tally[q.o[j][2]]++));
+  const top=Object.keys(tally).sort((a,b)=>tally[b]-tally[a])[0];
+  const [tn,td]=TYPES[top];
+  const verdict=pct>=70?"何志勇很可能就是你在找的好市長。"
+    :pct>=40?"你和何志勇有不少共同點，看看他在其他議題上的做法。"
+    :"你和何志勇在多數議題上想法不同，不妨看看他的完整政見再決定。";
+  const group={ok:[],part:[],diff:[]};
+  Q.forEach((q,i)=>{const sc=scores[i],cls=sc>.5?"ok":sc===.5?"part":"diff";
+    const label={ok:"✓ 想法一致",part:"部分一致",diff:"想法不同"}[cls];
+    const picks=orders[i].filter(j=>ans[i].includes(j)).map(j=>q.o[j][0]);
+    group[cls].push(`<li class="${cls}"><span class="t">${label}・${q.t}</span>
+      <span class="you">你選：${esc(picks.join("、"))}</span>
+      <span class="ho">何志勇的主張：${esc(q.ho)}</span></li>`);});
+  const sec=(k,h)=>group[k].length?`<h2>${h}（${group[k].length}）</h2><ul class="list">${group[k].join("")}</ul>`:"";
+  $("quiz").hidden=true;
+  $("result").hidden=false;
+  $("result").innerHTML=`<div class="card">
+     <div class="type">你心目中的好市長是</div>
+     <p class="type-name">${tn}</p>
+     <p style="margin:0">${td}</p>
    </div>
-   <div class="big">${ans.every(a=>a===NONE)?"您每一題都選了「沒有意見」，所以無法和參選人的政見比對。":close.length===1
-     ?`<em>${best[0]}</em>參選人的政見最貼合您的需要，您的選擇與他的政見有 <em>${top}%</em> 相同。`
-     :`您的選擇與 <em>${best.join("、")}</em> ${close.length===2?"兩":"三"}位參選人的政見都很接近，分別有 ${close.map(x=>`<em>${x.pct}%</em>`).join("、")} 相同。`}${shareTxt}</div>${coverHTML()}`;
-
-  const rows=Q.map((q,i)=>{
-    const mine=q.o[ans[i]][0];
-    const cells=C.map(c=>{const p=q.cand[c.id];
-      const v=qScore(p,ans[i]),tag=v===null?"不計":v===1?"✓ +1":v===.5?"+0.5":"+0";
-      if(!p)return `<td class="na">${tag}　未找到明確主張</td>`;
-      return `<td class="${v===1?"hit":""}">${tag}　${esc(p[1])}</td>`;}).join("");
-    return `<tr><th>${q.t}<br><small>你選：${esc(mine)}</small></th>${cells}</tr>`;}).join("");
-  $("match").innerHTML=`<div class="eyebrow">參選人政見貼合度</div>
-   <div class="cands">${m.map(x=>`<div class="cand"><div><b>${x.name}</b><small>${x.party}</small></div>
-     <div class="cbar"><i style="width:${x.pct}%"></i></div><div class="pct">${x.pct}%</div></div>`).join("")}</div>
-   <p class="note">貼合度＝得分加總 ÷ 計分題數。你選的做法屬於該參選人主張得 1 分，不屬於得 0 分；該參選人在這題沒有找到明確主張得 0.5 分；你選「沒有意見」的題目不計分。每題依參選人列為核心的主張對應兩個做法。最高分與其他參選人差距在 10 個百分點以內時，結果會並列顯示。</p>
-   <details><summary>逐題對照與資料來源</summary>
-    <div class="tbl"><table><thead><tr><th>議題</th>${C.map(c=>`<th>${c.name}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>
-    <p class="note" style="margin-top:10px">${SOURCES.map(s=>s[1]?`<a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a>`:s[0]).join("・")}</p>
-   </details>`;
-  $("out").hidden=false;$("match").hidden=false;$("survey").hidden=false;
-  shownKey=key;renderProgress();
-  return key;
+   <div class="card">
+     <div class="score"><span class="num">${pct}%</span><span class="of">你和何志勇的想法一致</span></div>
+     <p class="verdict">${verdict}</p>
+     ${sec("ok","想法一致的議題")}${sec("part","部分一致的議題")}${sec("diff","想法不同的議題")}
+     <p class="note">計分方式：每題依你所選的做法中，屬於何志勇主張的比例計分，再平均成百分比。</p>
+     <div class="row"><a class="cta" href="${WEBSITE}" target="_blank" rel="noopener">看何志勇完整政見</a><button class="ghost" id="again" type="button">重新測驗</button></div>
+   </div>`;
+  $("again").onclick=()=>{ans.forEach(a=>a.length=0);$("result").hidden=true;$("quiz").hidden=false;show(0);window.scrollTo(0,0);};
+  window.scrollTo(0,0);
 }
-
-async function saveResult(key){
-  try{await post("result",{type:key,best:bestIds()});}catch(e){}
-  await loadStats();if(shownKey)showResult();
-}
-$("see").onclick=()=>{const key=showResult();saveResult(key);$("out").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"});};
-$("rand").onclick=()=>{ans.forEach((_,i)=>ans[i]=Math.floor(Math.random()*Q[i].o.length));renderProgress();refresh();};
-$("reset").onclick=()=>{ans.fill(null);renderProgress();};
-$("yes").onclick=()=>{$("consent").hidden=true;$("form").hidden=false;$("declined").hidden=true;};
-$("no").onclick=()=>{$("consent").hidden=true;$("declined").hidden=false;};
-
-$("form").addEventListener("submit",async e=>{
-  e.preventDefault();
-  const fd=new FormData($("form"));
-  const data={};for(const k of Object.keys(SURVEY))data[k]=fd.get(k);
-  const missing=Object.keys(SURVEY).filter(k=>!data[k]);
-  const msg=$("smsg");
-  if(missing.length){msg.className="msg err";msg.textContent=`還有 ${missing.length} 題沒選`;return;}
-  $("send").disabled=true;msg.className="msg";msg.textContent="送出中…";
-  try{
-    await post("survey",{...data,type:shownKey});
-    try{localStorage.setItem("hcq_survey",JSON.stringify(data));}catch(e){}
-    msg.textContent="已送出，謝謝您的填答。改了選項可以再送出一次。";
-  }catch(err){msg.className="msg err";msg.textContent="送出失敗，請稍後再試一次";}
-  $("send").disabled=false;
-});
-
-renderProgress();
-loadStats();
-try{const v=JSON.parse(localStorage.getItem("hcq_survey")||"null");
-  if(v){for(const k of Object.keys(SURVEY)){const el=[...document.querySelectorAll(`input[name="${k}"]`)].find(x=>x.value===v[k]);if(el)el.checked=true;}}}catch(e){}
+$("start").onclick=()=>{$("intro").hidden=true;$("quiz").hidden=false;show(0);};
+$("back").onclick=()=>go(-1);
+$("next").onclick=()=>go(1);
 </script>
-
 </body>
 </html>
