@@ -1,0 +1,9 @@
+{
+  "name": "hsinchu-citizen-quiz",
+  "version": "1.0.0",
+  "private": true,
+  "description": "新竹市民性格測驗與不記名選舉問卷",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" }
+}
