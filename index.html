@@ -5,6 +5,21 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>何志勇是你的好市長嗎</title>
 <meta name="description" content="十個新竹生活情境，測出你心目中的市長類型，看看何志勇的政見和你有多合。何志勇競選團隊製作。">
+
+<!-- ▼▼▼ 請把預覽圖片的標籤放在這裡（第 3 行的 <head> 與第 78 行的 </head> 之間） ▼▼▼ -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://chihyungho.github.io/">
+<meta property="og:title" content="何志勇是你的好市長嗎？新竹生活情境小測驗">
+<meta property="og:description" content="十個新竹生活情境，測出你心目中的市長類型，看看何志勇的政見和你有多合。">
+<meta property="og:image" content="https://chihyungho.github.io/preview.jpg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://chihyungho.github.io/">
+<meta name="twitter:title" content="何志勇是你的好市長嗎？新竹生活情境小測驗">
+<meta name="twitter:description" content="十個新竹生活情境，測出你心目中的市長類型，看看何志勇的政見和你有多合。">
+<meta name="twitter:image" content="https://chihyungho.github.io/preview.jpg">
+<!-- ▲▲▲ 結束 ▲▲▲ -->
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
 <style>
@@ -152,58 +167,58 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 function show(i){
-  cur=i;const q=Q[i];
-  $("qnum").textContent=`${i+1} / ${Q.length}`;
-  $("prog").style.width=(i/Q.length*100)+"%";
-  $("topic").textContent=q.t;$("scene").textContent=q.sc;
-  $("opts").innerHTML=orders[i].map(j=>`<button class="opt" type="button" data-j="${j}" aria-pressed="${ans[i].includes(j)}">${esc(q.o[j][0])}</button>`).join("");
-  $("opts").querySelectorAll(".opt").forEach(b=>b.onclick=()=>{const j=+b.dataset.j,k=ans[i].indexOf(j);
-    if(k>=0)ans[i].splice(k,1);else ans[i].push(j);
-    b.setAttribute("aria-pressed",k<0);$("next").disabled=!ans[i].length;});
-  $("back").disabled=i===0;
-  $("next").disabled=!ans[i].length;
-  $("next").textContent=i===Q.length-1?"看結果":"下一題";
+ cur=i;const q=Q[i];
+ $("qnum").textContent=`${i+1} / ${Q.length}`;
+ $("prog").style.width=(i/Q.length*100)+"%";
+ $("topic").textContent=q.t;$("scene").textContent=q.sc;
+ $("opts").innerHTML=orders[i].map(j=>`<button class="opt" type="button" data-j="${j}" aria-pressed="${ans[i].includes(j)}">${esc(q.o[j][0])}</button>`).join("");
+ $("opts").querySelectorAll(".opt").forEach(b=>b.onclick=()=>{const j=+b.dataset.j,k=ans[i].indexOf(j);
+  if(k>=0)ans[i].splice(k,1);else ans[i].push(j);
+  b.setAttribute("aria-pressed",k<0);$("next").disabled=!ans[i].length;});
+ $("back").disabled=i===0;
+ $("next").disabled=!ans[i].length;
+ $("next").textContent=i===Q.length-1?"看結果":"下一題";
 }
 function go(d){
-  if(d>0&&!ans[cur].length)return;
-  if(cur+d>=Q.length)return result();
-  if(cur+d>=0)show(cur+d);
+ if(d>0&&!ans[cur].length)return;
+ if(cur+d>=Q.length)return result();
+ if(cur+d>=0)show(cur+d);
 }
 // 每題得分＝所選做法中屬於何志勇主張的比例
 const qScore=i=>ans[i].filter(j=>Q[i].o[j][1]===1).length/ans[i].length;
 function result(){
-  const scores=Q.map((_,i)=>qScore(i));
-  const pct=Math.round(scores.reduce((a,b)=>a+b,0)/Q.length*100);
-  const tally={B:0,C:0,R:0,S:0};Q.forEach((q,i)=>ans[i].forEach(j=>tally[q.o[j][2]]++));
-  const top=Object.keys(tally).sort((a,b)=>tally[b]-tally[a])[0];
-  const [tn,td]=TYPES[top];
-  const verdict=pct>=70?"何志勇很可能就是你在找的好市長。"
-    :pct>=40?"你和何志勇有不少共同點，看看他在其他議題上的做法。"
-    :"你和何志勇在多數議題上想法不同，不妨看看他的完整政見再決定。";
-  const group={ok:[],part:[],diff:[]};
-  Q.forEach((q,i)=>{const sc=scores[i],cls=sc>.5?"ok":sc===.5?"part":"diff";
-    const label={ok:"✓ 想法一致",part:"部分一致",diff:"想法不同"}[cls];
-    const picks=orders[i].filter(j=>ans[i].includes(j)).map(j=>q.o[j][0]);
-    group[cls].push(`<li class="${cls}"><span class="t">${label}・${q.t}</span>
-      <span class="you">你選：${esc(picks.join("、"))}</span>
-      <span class="ho">何志勇的主張：${esc(q.ho)}</span></li>`);});
-  const sec=(k,h)=>group[k].length?`<h2>${h}（${group[k].length}）</h2><ul class="list">${group[k].join("")}</ul>`:"";
-  $("quiz").hidden=true;
-  $("result").hidden=false;
-  $("result").innerHTML=`<div class="card">
-     <div class="type">你心目中的好市長是</div>
-     <p class="type-name">${tn}</p>
-     <p style="margin:0">${td}</p>
-   </div>
-   <div class="card">
-     <div class="score"><span class="num">${pct}%</span><span class="of">你和何志勇的想法一致</span></div>
-     <p class="verdict">${verdict}</p>
-     ${sec("ok","想法一致的議題")}${sec("part","部分一致的議題")}${sec("diff","想法不同的議題")}
-     <p class="note">計分方式：每題依你所選的做法中，屬於何志勇主張的比例計分，再平均成百分比。</p>
-     <div class="row"><a class="cta" href="${WEBSITE}" target="_blank" rel="noopener">看何志勇完整政見</a><button class="ghost" id="again" type="button">重新測驗</button></div>
-   </div>`;
-  $("again").onclick=()=>{ans.forEach(a=>a.length=0);$("result").hidden=true;$("quiz").hidden=false;show(0);window.scrollTo(0,0);};
-  window.scrollTo(0,0);
+ const scores=Q.map((_,i)=>qScore(i));
+ const pct=Math.round(scores.reduce((a,b)=>a+b,0)/Q.length*100);
+ const tally={B:0,C:0,R:0,S:0};Q.forEach((q,i)=>ans[i].forEach(j=>tally[q.o[j][2]]++));
+ const top=Object.keys(tally).sort((a,b)=>tally[b]-tally[a])[0];
+ const [tn,td]=TYPES[top];
+ const verdict=pct>=70?"何志勇很可能就是你在找的好市長。"
+  :pct>=40?"你和何志勇有不少共同點，看看他在其他議題上的做法。"
+  :"你和何志勇在多數議題上想法不同，不妨看看他的完整政見再決定。";
+ const group={ok:[],part:[],diff:[]};
+ Q.forEach((q,i)=>{const sc=scores[i],cls=sc>.5?"ok":sc===.5?"part":"diff";
+  const label={ok:"✓ 想法一致",part:"部分一致",diff:"想法不同"}[cls];
+  const picks=orders[i].filter(j=>ans[i].includes(j)).map(j=>q.o[j][0]);
+  group[cls].push(`<li class="${cls}"><span class="t">${label}・${q.t}</span>
+   <span class="you">你選：${esc(picks.join("、"))}</span>
+   <span class="ho">何志勇的主張：${esc(q.ho)}</span></li>`);});
+ const sec=(k,h)=>group[k].length?`<h2>${h}（${group[k].length}）</h2><ul class="list">${group[k].join("")}</ul>`:"";
+ $("quiz").hidden=true;
+ $("result").hidden=false;
+ $("result").innerHTML=`<div class="card">
+   <div class="type">你心目中的好市長是</div>
+   <p class="type-name">${tn}</p>
+   <p style="margin:0">${td}</p>
+  </div>
+  <div class="card">
+   <div class="score"><span class="num">${pct}%</span><span class="of">你和何志勇的想法一致</span></div>
+   <p class="verdict">${verdict}</p>
+   ${sec("ok","想法一致的議題")}${sec("part","部分一致的議題")}${sec("diff","想法不同的議題")}
+   <p class="note">計分方式：每題依你所選的做法中，屬於何志勇主張的比例計分，再平均成百分比。</p>
+   <div class="row"><a class="cta" href="${WEBSITE}" target="_blank" rel="noopener">看何志勇完整政見</a><button class="ghost" id="again" type="button">重新測驗</button></div>
+  </div>`;
+ $("again").onclick=()=>{ans.forEach(a=>a.length=0);$("result").hidden=true;$("quiz").hidden=false;show(0);window.scrollTo(0,0);};
+ window.scrollTo(0,0);
 }
 $("start").onclick=()=>{$("intro").hidden=true;$("quiz").hidden=false;show(0);};
 $("back").onclick=()=>go(-1);
